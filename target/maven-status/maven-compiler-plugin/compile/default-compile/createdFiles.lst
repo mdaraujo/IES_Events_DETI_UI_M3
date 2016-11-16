@@ -1,0 +1,6 @@
+entities\Evento.class
+views\EditEventView.class
+views\UserLoginView.class
+views\CreateEventView.class
+views\MainView.class
+entities\Utilizador.class
