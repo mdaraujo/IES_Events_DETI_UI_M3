@@ -9,6 +9,7 @@ import entities.Evento;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import javax.annotation.PostConstruct;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
@@ -21,11 +22,12 @@ import javax.faces.context.FacesContext;
 @RequestScoped
 public class CreateEventView implements Serializable {
 
-    public CreateEventView() {
+    private Evento event;
+
+    @PostConstruct
+    public void init() {
         this.event = new Evento();
     }
-    
-    private Evento event;
 
     public Evento getEvent() {
         return event;
@@ -34,11 +36,11 @@ public class CreateEventView implements Serializable {
     public void setEvent(Evento event) {
         this.event = event;
     }
-    
+
     public String createEvent() {
-        
+
         FacesContext.getCurrentInstance().addMessage(null,
-            new FacesMessage("The Event "  + event.getNome() + " Is Registered Successfully"));
+                new FacesMessage("The Event " + event.getNome() + " Is Registered Successfully"));
         return "";
     }
 }

@@ -25,9 +25,11 @@ public class EditEventView implements Serializable {
     private Evento event;
     private MainView mv;
     
-    public EditEventView() {
+    @PostConstruct
+    public void init() {
+        System.out.println("PASSEI AQUI");
         mv = new MainView();
-        this.event = new Evento();
+        event = new Evento();
         
         Map<String,String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         

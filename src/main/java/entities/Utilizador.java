@@ -14,13 +14,11 @@ import java.io.Serializable;
 public class Utilizador implements Serializable {
     
     private String nome;
-    private String password;
 
-    public Utilizador(String nome, String password) {
+    public Utilizador(String nome) {
         this.nome = nome;
-        this.password = password;
     }
-
+    
     public String getNome() {
         return nome;
     }
@@ -28,12 +26,5 @@ public class Utilizador implements Serializable {
     public void setNome(String nome) {
         this.nome = nome;
     }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    
 }

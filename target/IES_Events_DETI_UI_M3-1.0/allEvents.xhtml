@@ -4,140 +4,108 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-<h:head>
-    <title>Facelet Title</title>
-</h:head>
-<h:body>
-<div class="ui-fluid">
-<h:form id="form" >
-    <p:panelGrid columns="3" columnClasses="ui-grid-col-9,ui-grid-col-2, ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank">
-        <p:outputLabel value="EVENTS@DETI"/>
-        <p:outputLabel value="Logged in as #{mainView.currentUser.nome}"/>
-        <h:outputLink value="javascript:void(0)" onclick="PF('dlg').show();" title="login">
-            <p:graphicImage url="/images/login.png" />
-        </h:outputLink>
-    </p:panelGrid>
-    
- 
-    <p:growl id="growl" sticky="true" showDetail="true" life="3000" />
- 
-    <p:dialog header="Login" widgetVar="dlg" resizable="false">
-        <h:panelGrid columns="2" cellpadding="5">
-            <h:outputLabel for="username" value="Username:" />
-            <p:inputText id="username" value="#{userLoginView.username}" required="true" label="username" />
- 
-            <h:outputLabel for="password" value="Password:" />
-            <p:password id="password" value="#{userLoginView.password}" required="true" label="password" />
- 
-            <f:facet name="footer">
-                <p:commandButton value="Login" update="growl" actionListener="#{userLoginView.login}"
-                                 oncomplete="handleLoginRequest(xhr, status, args)" />
-            </f:facet>  
-        </h:panelGrid>
-    </p:dialog>
-    
-    
-    <p:tabMenu activeIndex="#{param.i}">
-        <p:menuitem value="Events" outcome="/allEvents" icon="ui-icon-search"> 
-            <f:param name="i" value="0" />
-        </p:menuitem>
-        <p:menuitem value="Create Event" outcome="/createEvent" icon="ui-icon-star">
-            <f:param name="i" value="1" />
-        </p:menuitem>
-        <p:menuitem value="Edit Event" outcome="/editEvent" icon="ui-icon-document" rendered="false">
-            <f:param name="i" value="2" />
-        </p:menuitem>
-    </p:tabMenu>
-    
-    <p:dataGrid var="event" value="#{mainView.searchEventsByName}" columns="3" layout="grid"
-        rows="12" paginator="true" id="events"
-        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-        rowsPerPageTemplate="6,12,16">
- 
-        <f:facet name="header">
-            <h:panelGrid columns="7">
-                <p:outputLabel value="Name:"></p:outputLabel>
-                <p:inputText value="#{mainView.searchName}"></p:inputText>
-                <p:outputLabel value="Data:"></p:outputLabel>
-                <p:inputText> </p:inputText>
-                <p:outputLabel value="Local:"></p:outputLabel>
-                <p:inputText> </p:inputText>
-                <p:commandButton value="Search" update="events"/>
-            </h:panelGrid>
-        </f:facet>
- 
-        <p:panel header="#{event.nome}" style="text-align:center">
-            <h:panelGrid columns="1" style="width:100%">
-                <p:graphicImage url="/images/#{event.tipo}.png"/> 
- 
-                <p:selectOneMenu value="Vou" effect="fold" editable="true">
-                    <f:selectItem itemLabel="Vou" itemValue="" />
-                    <f:selectItem itemLabel="Não Vou" itemValue="" />
-                    <f:selectItem itemLabel="Talvez" itemValue="" />
-                </p:selectOneMenu>
-                
-                <h:outputText value="Admin: #{event.admin.nome}" />
- 
-                <p:commandLink update=":form:eventDetail" oncomplete="PF('eventDialog').show()" title="View Detail" actionListener="#{mainView.setSelectedEvent(event)}">
-                    <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" />
-                </p:commandLink>
-            </h:panelGrid>
-        </p:panel>
- 
-        <f:facet name="footer">
-            In total there are #{mainView.numberOfAllEvents} events.
-        </f:facet>
-        
-    </p:dataGrid>
-    
-    <p:dialog header="Event Info" widgetVar="eventDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
-        <p:outputPanel id="eventDetail" style="text-align:center;">
-            <p:panelGrid  columns="2" rendered="#{not empty mainView.selectedEvent}" columnClasses="label,value">
-                <f:facet name="header">
-                    <p:graphicImage url="/images/#{mainView.selectedEvent.tipo}.png"/> 
-                </f:facet>
- 
-                <h:outputText value="Nome" />
-                <h:outputText value="#{mainView.selectedEvent.nome}" />
-                
-                <h:outputText value="Data" />
-                <h:outputText value="#{mainView.selectedEvent.data}" />
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body style="background: linear-gradient(to right, #898c90, #dbddde)">
+        <div class="ui-fluid" style="padding: 20px">
+            <h:form id="form" >
+                <p:panelGrid columns="3" columnClasses="ui-grid-col-8,ui-grid-col-3, ui-grid-col-1" layout="grid" styleClass="ui-panelgrid-blank">
+                    <p:outputLabel value="EVENTS@DETI" style="font-size: 26px"/>
+                    <p:outputLabel value="Logged in as #{mainView.currentUser.nome}" style="font-size: 18px" />
+                    <p:commandButton value="Logout" action="#{userLoginView.logoutBtnClick}" update="growl"/>
+                </p:panelGrid>
 
-                <h:outputText value="Descrição" />
-                <h:outputText value="#{mainView.selectedEvent.descricao}" />
-                
-                <h:outputText value="Local" />
-                <h:outputText value="#{mainView.selectedEvent.local}" />
+                <p:growl id="growl" showDetail="true" life="2000" />
 
-                <h:outputText value="Admin" />
-                <h:outputText value="#{mainView.selectedEvent.admin.nome}" />
-            </p:panelGrid>
-        </p:outputPanel>
-        
-        <p:panelGrid  columns="2" styleClass="ui-panelgrid-blank" id="btns">
-            <p:button value="Edit" rendered="#{mainView.selectedEventEditable}" outcome="editEvent">
-                <f:param name="eventNome" value="#{mainView.selectedEvent.nome}" />
-                <f:param name="i" value="2" />
-            </p:button>
-            <p:commandButton value="Delete" rendered="#{mainView.selectedEventEditable}" />
-        </p:panelGrid>
-    </p:dialog>
-    
-</h:form>
-</div>
-</h:body>
-    
-<script type="text/javascript">
-    function handleLoginRequest(xhr, status, args) {
-        if(args.validationFailed || !args.loggedIn) {
-            PF('dlg').jq.effect("shake", {times:5}, 100);
-        }
-        else {
-            PF('dlg').hide();
-            $('#loginLink').fadeOut();
-            window.open("allEvents.xhtml","_self");
-        }
-    }
-</script>
+                <p:tabMenu activeIndex="#{param.i}">
+                    <p:menuitem value="Events" outcome="/allEvents" icon="ui-icon-search"> 
+                        <f:param name="i" value="0" />
+                    </p:menuitem>
+                    <p:menuitem value="Create Event" outcome="/createEvent" icon="ui-icon-star">
+                        <f:param name="i" value="1" />
+                    </p:menuitem>
+                     <p:menuitem value="My Account" outcome="/account" icon="fa fa-user">
+                        <f:param name="i" value="2" />
+                    </p:menuitem>
+                </p:tabMenu>
+
+                <p:dataGrid var="event" value="#{mainView.searchEventsByName}" columns="3" layout="grid"
+                            rows="12" paginator="true" id="events"
+                            paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                            rowsPerPageTemplate="6,12,16">
+
+                    <f:facet name="header">
+                        <h:panelGrid columns="7">
+                            <p:outputLabel value="Name:"></p:outputLabel>
+                            <p:inputText value="#{mainView.searchName}"></p:inputText>
+                            <p:outputLabel value="Data:"></p:outputLabel>
+                            <p:inputText> </p:inputText>
+                            <p:outputLabel value="Local:"></p:outputLabel>
+                            <p:inputText> </p:inputText>
+                            <p:commandButton value="Search" update="events"/>
+                        </h:panelGrid>
+                    </f:facet>
+
+                    <p:panel header="#{event.nome}" style="text-align:center">
+                        <h:panelGrid columns="1" style="width:100%">
+                            <p:graphicImage url="/images/#{event.tipo}.png"/> 
+
+                            <p:selectOneMenu value="Vou" effect="fold" editable="true">
+                                <f:selectItem itemLabel="Vou" itemValue="" />
+                                <f:selectItem itemLabel="Não Vou" itemValue="" />
+                                <f:selectItem itemLabel="Talvez" itemValue="" />
+                            </p:selectOneMenu>
+
+                            <h:outputText value="Admin: #{event.admin.nome}" />
+
+                            <p:commandLink update=":form:eventDetail" oncomplete="PF('eventDialog').show()" title="View Detail" actionListener="#{mainView.setSelectedEvent(event)}">
+                                <h:outputText styleClass="ui-icon ui-icon-search" style="margin:0 auto;" />
+                            </p:commandLink>
+                        </h:panelGrid>
+                    </p:panel>
+
+                    <f:facet name="footer">
+                        In total there are #{mainView.numberOfAllEvents} events.
+                    </f:facet>
+
+                </p:dataGrid>
+
+                <p:dialog header="Event Info" widgetVar="eventDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="eventDetail" style="text-align:center;">
+                        <p:panelGrid  columns="2" rendered="#{not empty mainView.selectedEvent}" columnClasses="label,value">
+                            <f:facet name="header">
+                                <p:graphicImage url="/images/#{mainView.selectedEvent.tipo}.png"/> 
+                            </f:facet>
+
+                            <h:outputText value="Nome" />
+                            <h:outputText value="#{mainView.selectedEvent.nome}" />
+
+                            <h:outputText value="Data" />
+                            <h:outputText value="#{mainView.selectedEvent.data}" />
+
+                            <h:outputText value="Descrição" />
+                            <h:outputText value="#{mainView.selectedEvent.descricao}" />
+
+                            <h:outputText value="Local" />
+                            <h:outputText value="#{mainView.selectedEvent.local}" />
+
+                            <h:outputText value="Admin" />
+                            <h:outputText value="#{mainView.selectedEvent.admin.nome}" />
+                        </p:panelGrid>
+                    </p:outputPanel>
+
+                    <p:panelGrid  columns="2" styleClass="ui-panelgrid-blank" id="btns">
+                        <p:button value="Edit" rendered="#{mainView.selectedEventEditable}" outcome="editEvent">
+                            <f:param name="eventNome" value="#{mainView.selectedEvent.nome}" />
+                            <f:param name="i" value="2" />
+                        </p:button>
+                        <p:commandButton value="Delete" rendered="#{mainView.selectedEventEditable}" />
+                    </p:panelGrid>
+                </p:dialog>
+
+            </h:form>
+        </div>
+    </h:body>
 </html>
 
